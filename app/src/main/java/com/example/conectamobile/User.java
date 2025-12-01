@@ -4,6 +4,7 @@ public class User {
     public String uid;
     public String email;
     public String username;
+    public String profileImageUrl;
 
     public User() {
         // Constructor vacío requerido por Firebase
@@ -12,6 +13,7 @@ public class User {
     public User(String uid, String email) {
         this.uid = uid;
         this.email = email;
-        this.username = email; // Por defecto usaremos el email como nombre
+        this.username = email;
+        this.profileImageUrl = "";
     }
 }

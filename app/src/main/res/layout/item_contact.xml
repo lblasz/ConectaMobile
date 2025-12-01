@@ -3,8 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     android:padding="16dp"
     android:background="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/ivContactItem"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="16dp"
+        android:src="@mipmap/ic_launcher_round"/>
 
     <TextView
         android:id="@+id/tvContactName"

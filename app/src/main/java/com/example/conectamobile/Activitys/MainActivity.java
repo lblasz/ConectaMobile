@@ -17,6 +17,7 @@ import com.example.conectamobile.Adapters.ContactsAdapter;
 import com.example.conectamobile.MqttHandler;
 import com.example.conectamobile.R;
 import com.example.conectamobile.User;
+import com.example.conectamobile.Activitys.ProfileActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private DatabaseReference mDatabase;
     private String currentUid;
     private Button btnAdd;
+    private Button btnProfile, btnLogout;
 
     private MqttHandler mqttHandler;
 
@@ -59,15 +61,34 @@ public class MainActivity extends AppCompatActivity {
 
         // Al hacer clic en un contacto, abriremos el Chat
         adapter = new ContactsAdapter(contactList, user -> {
-            Toast.makeText(this, "Abriendo chat con " + user.username, Toast.LENGTH_SHORT).show();
-             Intent intent = new Intent(MainActivity.this, ChatActivity.class);
-             intent.putExtra("friendUid", user.uid);
-             startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+            intent.putExtra("friendUid", user.uid);
+            intent.putExtra("friendName", user.username);
+            startActivity(intent);
         });
         recyclerView.setAdapter(adapter);
 
         btnAdd = findViewById(R.id.btnAddContact);
         btnAdd.setOnClickListener(v -> showAddContactDialog());
+        btnProfile = findViewById(R.id.btnProfile);
+        btnLogout = findViewById(R.id.btnLogout);
+
+        btnProfile.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+        });
+
+        btnLogout.setOnClickListener(v -> {
+            // 1. Desconectar MQTT
+            if (mqttHandler != null) {
+                mqttHandler.disconnect();
+            }
+            // 2. Cerrar sesión en Firebase
+            FirebaseAuth.getInstance().signOut();
+
+            // 3. Volver al Login
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        });
 
         loadContacts();
 

@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.conectamobile.Adapters.ChatAdapter;
+import com.example.conectamobile.ChatMessage;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -27,12 +29,18 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.example.conectamobile.R;
+import org.eclipse.paho.client.mqttv3.MqttClient;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class ChatActivity extends AppCompatActivity {
 
     private String chatTopic;
     private String friendUid, myUid;
     private String chatId; // ID único de la conversación
+    private TextView tvFriendName;
+    private ImageView btnBack;
 
     // UI
     private RecyclerView recyclerView;
@@ -54,6 +62,7 @@ public class ChatActivity extends AppCompatActivity {
 
         // 1. Obtener datos del Intent
         friendUid = getIntent().getStringExtra("friendUid");
+        String friendName = getIntent().getStringExtra("friendName");
         myUid = FirebaseAuth.getInstance().getUid();
 
         // Generar Chat ID único: (UID_Menor + "_" + UID_Mayor)
@@ -69,9 +78,19 @@ public class ChatActivity extends AppCompatActivity {
         mDbRef = FirebaseDatabase.getInstance().getReference("chats").child(chatId);
 
         // 3. Setup UI
-        recyclerView = findViewById(R.id.recyclerChat); // Pon este ID en el XML
-        etMessage = findViewById(R.id.etMessageInput);  // Pon este ID en el XML
-        btnSend = findViewById(R.id.btnSendMsg);        // Pon este ID en el XML
+        recyclerView = findViewById(R.id.recyclerChat);
+        etMessage = findViewById(R.id.etMessageInput);
+        btnSend = findViewById(R.id.btnSendMsg);
+        tvFriendName = findViewById(R.id.tvChatFriendName);
+        btnBack = findViewById(R.id.btnBackChat);
+
+        if (friendName != null) {
+            tvFriendName.setText(friendName);
+        } else {
+            tvFriendName.setText("Chat");
+        }
+
+        btnBack.setOnClickListener(v -> finish());
 
         messageList = new ArrayList<>();
         adapter = new ChatAdapter(messageList, myUid);
@@ -112,7 +131,7 @@ public class ChatActivity extends AppCompatActivity {
     }
 
     private void connectMQTT() {
-        String clientId = MqttAndroidClient.generateClientId();
+        String clientId = MqttClient.generateClientId();
         mqttClient = new MqttAndroidClient(this.getApplicationContext(), "tcp://broker.hivemq.com:1883", clientId);
 
         try {
@@ -135,12 +154,8 @@ public class ChatActivity extends AppCompatActivity {
 
                 @Override
                 public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    // ¡Llegó un mensaje por MQTT!
+                    // llegó un mensaje por MQTT
                     String payload = new String(message.getPayload());
-
-                    // Nota: MQTT envía texto plano. En un caso real enviarías JSON.
-                    // Para simplificar este ejercicio académico, asumimos que el payload es:
-                    // "SENDER_ID:MENSAJE"
 
                     String[] parts = payload.split(":", 2);
                     if (parts.length == 2) {

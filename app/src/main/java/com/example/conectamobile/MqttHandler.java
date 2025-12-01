@@ -16,8 +16,8 @@ public class MqttHandler {
     private MqttAndroidClient client;
     private static final String TAG = "MqttHandler";
 
-    // Usaremos un broker público para pruebas académicas
-    // IMPORTANTE: Cambia esto si usas un broker local o privado
+    // broker público para pruebas académicas
+
     private static final String SERVER_URI = "tcp://broker.hivemq.com:1883";
 
     public void connect(Context context, String clientId) {
