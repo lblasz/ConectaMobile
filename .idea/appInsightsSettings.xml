@@ -8,10 +8,10 @@
             <InsightsFilterSettings>
               <option name="connection">
                 <ConnectionSetting>
-                  <option name="appId" value="PLACEHOLDER" />
-                  <option name="mobileSdkAppId" value="" />
-                  <option name="projectId" value="" />
-                  <option name="projectNumber" value="" />
+                  <option name="appId" value="com.example.conectamobile" />
+                  <option name="mobileSdkAppId" value="1:774805555296:android:dffc5a2ae5b53bd45e5b05" />
+                  <option name="projectId" value="crudfirebase-30db2" />
+                  <option name="projectNumber" value="774805555296" />
                 </ConnectionSetting>
               </option>
               <option name="signal" value="SIGNAL_UNSPECIFIED" />
