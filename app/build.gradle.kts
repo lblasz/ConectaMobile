@@ -12,7 +12,7 @@ android {
     defaultConfig {
         applicationId = "com.example.conectamobile"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 30
         versionCode = 1
         versionName = "1.0"
 
